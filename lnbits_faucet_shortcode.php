@@ -45,7 +45,7 @@ function lnurl_api($data)
     {
         $ip = $_SERVER['REMOTE_ADDR'];
     }
-    $haship = wp_hash(strval($ip));
+    $haship = wp_hash(strval($ip) + encrypt_decrypt('decrypt', $data['lnurl']));
     $variable = encrypt_decrypt('decrypt', $data['lnurl']);
 
     $response = wp_remote_get($data['server'] . '/withdraw/api/v1/links/' . $haship . '/' . 
@@ -56,7 +56,7 @@ function lnurl_api($data)
     ));
     $body = wp_remote_retrieve_body($response);
     $dataa = json_decode($body);
-    if (!$dataa->{'lnurl'} and !$dataa->{'hash'})
+    if (!$dataa->{'lnurl'} and $dataa->{'hash'})
     {
 
         $getlnurl = wp_remote_get($data['server'] . '/withdraw/api/v1/links/' . $variable, array(
@@ -71,7 +71,7 @@ function lnurl_api($data)
         return $LNURL;
     }
 
-    return $dataa->{'hash'};
+    return "error";
 }
 
 add_action("rest_api_init", function ()
@@ -95,6 +95,7 @@ function lnurlcaptcha_function($atts = array())
     /////////GET FILE PATHS FOR CAPTCHA/QR/////////
     $jsqr = get_template_directory_uri() . '/js/qr.js';
     $jscaptcha = get_template_directory_uri() . '/js/captcha.js';
+    $stop = get_template_directory_uri() . '/js/stop.js';
     $faucetapi = get_template_directory_uri() . '/faucet_api.php';
 
     return <<<HTML
@@ -127,6 +128,7 @@ function lnurlcaptcha_function($atts = array())
   </style>
   <script type="text/javascript" src="{$jscaptcha}"></script>
   <script type="text/javascript" src="{$jsqr}"></script>
+  <script type="text/javascript" src="{$stop}"></script>
   <body>
     {$faucetapi}
     <center><div id="captcha" style="margin: 0px !important"></div></center>
@@ -144,23 +146,23 @@ function lnurlcaptcha_function($atts = array())
       data: {lnurl: '{$LNURL}', server: '{$server}', key: '{$key}'},
       success: function (obj, textstatus) {
       /////////RETURN LNURL IF IP IS NEW/////////
-      console.log(obj);
+        console.log(obj);
         if(obj.substring(0, 5) == "LNURL"){
-          console.log(obj.substring(0, 5));
           var typeNumber = 15;
           var errorCorrectionLevel = "H";
           var qr = qrcode(typeNumber, errorCorrectionLevel);
           qr.addData(obj);
+          qr.make();
           document.getElementById(
                "captcha"
-          ).innerHTML = qr.createImgTag();
+          ).innerHTML = qr.createImgTag().link("lightning://" + obj);
           document.getElementById("msg").innerHTML =
           "Scan with bitcoin lightning wallet";
         }
         else{
           document.getElementById("msg").innerHTML =
           "Faucet already claimed!";
-          document.getElementById("captcha").innerHTML = "";
+          document.getElementById("captcha").innerHTML = "<img style='display:block; width:170px;height:170px;' id='base64image' src='" + stop + "'>";
         }    
       }
       });
