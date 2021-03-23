@@ -45,7 +45,7 @@ function lnurl_api($data)
     {
         $ip = $_SERVER['REMOTE_ADDR'];
     }
-    $haship = wp_hash(strval($ip) + encrypt_decrypt('decrypt', $data['lnurl']));
+    $haship = wp_hash(strval($ip) . "jjjjj" . strval($data['lnurl']));
     $variable = encrypt_decrypt('decrypt', $data['lnurl']);
 
     $response = wp_remote_get($data['server'] . '/withdraw/api/v1/links/' . $haship . '/' . 
@@ -56,7 +56,7 @@ function lnurl_api($data)
     ));
     $body = wp_remote_retrieve_body($response);
     $dataa = json_decode($body);
-    if (!$dataa->{'lnurl'} and $dataa->{'hash'})
+    if ($dataa->{'lnurl'} and !$dataa->{'hash'})
     {
 
         $getlnurl = wp_remote_get($data['server'] . '/withdraw/api/v1/links/' . $variable, array(
@@ -95,7 +95,8 @@ function lnurlcaptcha_function($atts = array())
     /////////GET FILE PATHS FOR CAPTCHA/QR/////////
     $jsqr = get_template_directory_uri() . '/js/qr.js';
     $jscaptcha = get_template_directory_uri() . '/js/captcha.js';
-    $stop = get_template_directory_uri() . '/js/stop.js';
+    $error = get_template_directory_uri() . '/js/error.svg';
+    $cach = get_template_directory_uri() . '/js/cach.svg';
     $faucetapi = get_template_directory_uri() . '/faucet_api.php';
 
     return <<<HTML
@@ -113,10 +114,10 @@ function lnurlcaptcha_function($atts = array())
       color: #6a6f77;
     }
     #msg {
-      width: 100%;
+      width: 254px;
+      text-align: center;
       line-height: 40px;
       font-size: 14px;
-      text-align: center;
     }
     a:link,
     a:visited,
@@ -128,51 +129,48 @@ function lnurlcaptcha_function($atts = array())
   </style>
   <script type="text/javascript" src="{$jscaptcha}"></script>
   <script type="text/javascript" src="{$jsqr}"></script>
-  <script type="text/javascript" src="{$stop}"></script>
   <body>
-    {$faucetapi}
-    <center><div id="captcha" style="margin: 0px !important"></div></center>
-    <div id="msg"></div>
+    <div style="height:232px; width:170px;">
+      <center><div id="captcha"></div></center>
+      <div id="msg"></div>
+    </div>
   </body>
   <script type="text/javascript">
     jigsaw.init({
       el: document.getElementById("captcha"),
       imgArray: [],
       onSuccess: function () {
-      /////////CHECK IP/////////
-      jQuery.ajax({
-      type: "POST",
-      url: '/wp-json/lnurl/v1/faucet',
-      data: {lnurl: '{$LNURL}', server: '{$server}', key: '{$key}'},
-      success: function (obj, textstatus) {
-      /////////RETURN LNURL IF IP IS NEW/////////
-        console.log(obj);
-        if(obj.substring(0, 5) == "LNURL"){
-          var typeNumber = 15;
-          var errorCorrectionLevel = "H";
-          var qr = qrcode(typeNumber, errorCorrectionLevel);
-          qr.addData(obj);
-          qr.make();
-          document.getElementById(
-               "captcha"
-          ).innerHTML = qr.createImgTag().link("lightning://" + obj);
-          document.getElementById("msg").innerHTML =
-          "Scan with bitcoin lightning wallet";
+        /////////SHOW PROCESSING/////////
+        document.getElementById("msg").innerHTML =
+        "Processing...";
+        document.getElementById("captcha").innerHTML = "<img style='display:block; width:170px;height:170px;' src='{$cach}'>";
+        /////////CHECK IF USER IS NEW/////////
+        jQuery.ajax({
+        type: "POST",
+        url: '/wp-json/lnurl/v1/faucet',
+        data: {lnurl: '{$LNURL}', server: '{$server}', key: '{$key}'},
+        success: function (obj, textstatus) {
+          /////////RETURN LNURL IF IP IS NEW/////////
+          if(obj.substring(0, 5) == "LNURL"){
+            var typeNumber = 15;
+            var errorCorrectionLevel = "H";
+            var qr = qrcode(typeNumber, errorCorrectionLevel);
+            qr.addData(obj);
+            qr.make();
+            document.getElementById("captcha").innerHTML = qr.createImgTag().link("lightning://" + obj);
+            document.getElementById("msg").innerHTML = "Scan with bitcoin lightning wallet";
+          }
+          else{
+            document.getElementById("msg").innerHTML = "Faucet already claimed!";
+            document.getElementById("captcha").innerHTML = "<img style='display:block; width:170px;height:170px;' src='{$error}'>";
+          }     
         }
-        else{
-          document.getElementById("msg").innerHTML =
-          "Faucet already claimed!";
-          document.getElementById("captcha").innerHTML = "<img style='display:block; width:170px;height:170px;' id='base64image' src='" + stop + "'>";
-        }    
-      }
-      });
+        });
       },
       onFail: cleanMsg,
       onRefresh: cleanMsg,
     });
     function cleanMsg() {
-      document.getElementById("msg").innerHTML = "Faucet already claimed!";
-      document.getElementById("captcha").innerHTML = "";
     }
   </script>
 </html>
