@@ -10,7 +10,7 @@
 ## Installation
 Upload these files/folders to your wordpress theme
 
-Add ```include('faucet_shortcode.php');``` to that bottom of your themes ```functions.php```
+Add ```include('faucet_shortcode.php');``` to the bottom of your themes ```functions.php```
 
 To use in a post/page use the shortcode: ```[faucet server="https://lnbits.com" lnurl="3psjRpvSose66yFYyVrN6Q" key="11b60d70f83c473089e9c1eed2511f44"]```
 
