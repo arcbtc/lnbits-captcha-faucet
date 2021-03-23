@@ -1,5 +1,5 @@
 # lnbits-captcha-faucet
-## Little captcha widget for lnbits faucet :)
+## Wordpress captcha widget shortcode lnbits faucet
 <div style="display: inline-block; width: 100%;">
 <img style="float:left;" src="https://i.imgur.com/rcho8fa.png">
 <img style="float:right;" src="https://i.imgur.com/DxQphoE.png">
