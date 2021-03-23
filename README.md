@@ -5,6 +5,8 @@
 <img style="float:right;" src="https://i.imgur.com/DxQphoE.png">
 </div>
 
+<a href="http://jigawatt.co/wordpress-bitcoin-lnurl-withdraw-faucet-with-captcha/">Demo</a>
+
 ## Installation
 Upload these files/folders to your wordpress theme
 
