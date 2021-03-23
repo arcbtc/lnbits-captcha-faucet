@@ -7,6 +7,8 @@
 
 <a href="http://jigawatt.co/wordpress-bitcoin-lnurl-withdraw-faucet-with-captcha/">Demo</a>
 
+Stores hash of users IP to avoid amilking the faucet by bots.
+
 ## Installation
 Upload these files/folders to your wordpress theme
 
