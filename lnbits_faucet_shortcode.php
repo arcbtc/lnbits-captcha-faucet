@@ -49,7 +49,7 @@ function lnurl_api($data)
     $variable = encrypt_decrypt('decrypt', $data['lnurl']);
 
     $response = wp_remote_get($data['server'] . '/withdraw/api/v1/links/' . $haship . '/' . 
-    $data['lnurl'], array(
+    $variable, array(
         'headers' => array(
             'X-Api-Key' => encrypt_decrypt('decrypt', $data['key'])
         )
@@ -59,7 +59,7 @@ function lnurl_api($data)
     if (!$dataa->{'lnurl'} and !$dataa->{'hash'})
     {
 
-        $getlnurl = wp_remote_get($data['server'] . '/withdraw/api/v1/links/' . $dataa->{'lnurl'}, array(
+        $getlnurl = wp_remote_get($data['server'] . '/withdraw/api/v1/links/' . $variable, array(
             'headers' => array(
                 'X-Api-Key' => encrypt_decrypt('decrypt', $data['key'])
             )
@@ -68,10 +68,10 @@ function lnurl_api($data)
         $lnurldata = json_decode($lnurlbody);
 
         $LNURL = $lnurldata->{'lnurl'};
-        return $lnurlbody;
+        return $LNURL;
     }
 
-    return $dataa->{'lnurl'};
+    return $dataa->{'hash'};
 }
 
 add_action("rest_api_init", function ()
@@ -144,16 +144,24 @@ function lnurlcaptcha_function($atts = array())
       data: {lnurl: '{$LNURL}', server: '{$server}', key: '{$key}'},
       success: function (obj, textstatus) {
       /////////RETURN LNURL IF IP IS NEW/////////
-      console.log(obj);     
-      var typeNumber = 15;
-      var errorCorrectionLevel = "H";
-      var qr = qrcode(typeNumber, errorCorrectionLevel);
-      qr.addData("{$LNURL}");
-      document.getElementById(
-             "captcha"
-      ).innerHTML = qr.createImgTag();
-      document.getElementById("msg").innerHTML =
-      "Scan with bitcoin lightning wallet";
+      console.log(obj);
+        if(obj.substring(0, 5) == "LNURL"){
+          console.log(obj.substring(0, 5));
+          var typeNumber = 15;
+          var errorCorrectionLevel = "H";
+          var qr = qrcode(typeNumber, errorCorrectionLevel);
+          qr.addData(obj);
+          document.getElementById(
+               "captcha"
+          ).innerHTML = qr.createImgTag();
+          document.getElementById("msg").innerHTML =
+          "Scan with bitcoin lightning wallet";
+        }
+        else{
+          document.getElementById("msg").innerHTML =
+          "Faucet already claimed!";
+          document.getElementById("captcha").innerHTML = "";
+        }    
       }
       });
       },
@@ -161,7 +169,8 @@ function lnurlcaptcha_function($atts = array())
       onRefresh: cleanMsg,
     });
     function cleanMsg() {
-      document.getElementById("msg").innerHTML = "";
+      document.getElementById("msg").innerHTML = "Faucet already claimed!";
+      document.getElementById("captcha").innerHTML = "";
     }
   </script>
 </html>
