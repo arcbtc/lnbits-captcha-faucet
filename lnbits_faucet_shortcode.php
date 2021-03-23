@@ -93,12 +93,10 @@ function lnurlcaptcha_function($atts = array())
     $key = encrypt_decrypt('encrypt', $a['key']);
     $server = $a['server'];
     /////////GET FILE PATHS FOR CAPTCHA/QR/////////
-    $jsqr = get_template_directory_uri() . '/js/qr.js';
-    $jscaptcha = get_template_directory_uri() . '/js/captcha.js';
-    $error = get_template_directory_uri() . '/js/error.svg';
-    $cach = get_template_directory_uri() . '/js/cach.svg';
-    $faucetapi = get_template_directory_uri() . '/faucet_api.php';
-
+    $jsqr = get_template_directory_uri() . '/fau/qr.js';
+    $jscaptcha = get_template_directory_uri() . '/fau/captcha.js';
+    $error = get_template_directory_uri() . '/fau/error.svg';
+    $cach = get_template_directory_uri() . '/fau/cach.svg';
     return <<<HTML
  <html>
   <style>
