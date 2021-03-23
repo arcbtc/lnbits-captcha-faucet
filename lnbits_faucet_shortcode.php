@@ -56,22 +56,22 @@ function lnurl_api($data)
     ));
     $body = wp_remote_retrieve_body($response);
     $dataa = json_decode($body);
-    if ($dataa->{'lnurl'} && $dataa->{'hash'})
+    if (!$dataa->{'lnurl'} and !$dataa->{'hash'})
     {
 
-        $getlnurl = wp_remote_get($data['server'] . '/withdraw/api/v1/links/' . $a['lnurl'], array(
+        $getlnurl = wp_remote_get($data['server'] . '/withdraw/api/v1/links/' . $dataa->{'lnurl'}, array(
             'headers' => array(
-                'X-Api-Key' => $a['key']
+                'X-Api-Key' => encrypt_decrypt('decrypt', $data['key'])
             )
         ));
         $lnurlbody = wp_remote_retrieve_body($getlnurl);
         $lnurldata = json_decode($lnurlbody);
 
         $LNURL = $lnurldata->{'lnurl'};
-        return $dataa;
+        return $lnurlbody;
     }
 
-    return $dataa;
+    return $dataa->{'lnurl'};
 }
 
 add_action("rest_api_init", function ()
@@ -144,8 +144,7 @@ function lnurlcaptcha_function($atts = array())
       data: {lnurl: '{$LNURL}', server: '{$server}', key: '{$key}'},
       success: function (obj, textstatus) {
       /////////RETURN LNURL IF IP IS NEW/////////
-      console.log(obj);
-      var response = JSON.parse(obj);
+      console.log(obj);     
       var typeNumber = 15;
       var errorCorrectionLevel = "H";
       var qr = qrcode(typeNumber, errorCorrectionLevel);
