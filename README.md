@@ -12,6 +12,6 @@ Add ```include('faucet_shortcode.php');``` to that bottom of your themes ```func
 
 To use in a post/page use the shortcode: ```[faucet server="https://lnbits.com" lnurl="3psjRpvSose66yFYyVrN6Q" key="11b60d70f83c473089e9c1eed2511f44"]```
 
-* server: an LNbits server
+* server: LNbits server
 * key: LNbits wallet invoice key attached to lnurl-withdraw
 * lnurl: lnurl-withdraw id generated in LNbits
