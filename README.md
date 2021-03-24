@@ -24,6 +24,6 @@ Change the ```$secret_key```variable in ```lnbits_faucet_shortcode.php```, as th
 
 ![image](https://user-images.githubusercontent.com/33088785/112185376-137c5e00-8bf8-11eb-97ec-dbdb6553da0e.png)
 
-## Shortcode
+## Shortcode demo
 
 https://i.imgur.com/1DYNtxq.mp4
