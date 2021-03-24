@@ -23,3 +23,6 @@ To use in a post/page use the shortcode: ```[faucet server="https://lnbits.com" 
 Change the ```$secret_key```variable in ```lnbits_faucet_shortcode.php```, as this is used to encrypt some data on the frontend 
 
 ![image](https://user-images.githubusercontent.com/33088785/112185376-137c5e00-8bf8-11eb-97ec-dbdb6553da0e.png)
+
+## Shortcode
+![video](https://i.imgur.com/1DYNtxq.mp4)
