@@ -1,5 +1,15 @@
 <?php
 
+
+function collectiveray_load_js_script() {
+    wp_enqueue_script( 'js-file', get_template_directory_uri() . '/fau/captcha.js');
+    wp_enqueue_script( 'js-file', get_template_directory_uri() . '/fau/qr.js');
+}
+
+add_action('wp_enqueue_scripts', 'collectiveray_load_js_script');
+
+
+
 function encrypt_decrypt($action, $string)
 {
     $output = false;
@@ -82,6 +92,7 @@ add_action("rest_api_init", function ()
     ));
 });
 
+
 function lnurlcaptcha_function($atts = array())
 {
     $a = shortcode_atts(array(
@@ -100,33 +111,13 @@ function lnurlcaptcha_function($atts = array())
     return <<<HTML
  <html>
   <style>
-    input {
-      display: block;
-      width: 290px;
-      line-height: 40px;
-      margin: 10px 0;
-      padding: 0 10px;
-      outline: none;
-      border: 1px solid #c8cccf;
-      border-radius: 4px;
-      color: #6a6f77;
-    }
     #msg {
       width: 254px;
       text-align: center;
       line-height: 40px;
-      font-size: 14px;
-    }
-    a:link,
-    a:visited,
-    a:hover,
-    a:active {
-      margin-left: 100px;
-      color: #0366d6;
+      font-size: 20px;
     }
   </style>
-  <script type="text/javascript" src="{$jscaptcha}"></script>
-  <script type="text/javascript" src="{$jsqr}"></script>
   <body>
     <div style="height:232px; width:170px;">
       <center><div id="captcha"></div></center>
