@@ -155,7 +155,7 @@ function lnurlcaptcha_function($atts = array())
             var qr = qrcode(typeNumber, errorCorrectionLevel);
             qr.addData(obj);
             qr.make();
-            document.getElementById("captcha").innerHTML = qr.createImgTag().link("lightning://" + obj);
+            document.getElementById("captcha").innerHTML = qr.createImgTag().link(obj);
             document.getElementById("msg").innerHTML = "Scan with bitcoin lightning wallet";
           }
           else{
