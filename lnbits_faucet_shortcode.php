@@ -2,8 +2,7 @@
 
 
 function collectiveray_load_js_script() {
-    wp_enqueue_script( 'js-file', get_template_directory_uri() . '/fau/captcha.js');
-    wp_enqueue_script( 'js-file', get_template_directory_uri() . '/fau/qr.js');
+  wp_enqueue_script( 'js-file', get_template_directory_uri() . '/fau/captcha.js');
 }
 
 add_action('wp_enqueue_scripts', 'collectiveray_load_js_script');
@@ -15,7 +14,7 @@ function encrypt_decrypt($action, $string)
     $output = false;
 
     $encrypt_method = "AES-256-CBC";
-    $secret_key = 'sdfgndfmndfhmdfhmd';
+    $secret_key = 'somerandomstring';
     $secret_iv = '';
 
     // hash
@@ -141,12 +140,7 @@ function lnurlcaptcha_function($atts = array())
         success: function (obj, textstatus) {
           /////////RETURN LNURL IF IP IS NEW/////////
           if(obj.substring(0, 5) == "LNURL"){
-            var typeNumber = 15;
-            var errorCorrectionLevel = "H";
-            var qr = qrcode(typeNumber, errorCorrectionLevel);
-            qr.addData(obj);
-            qr.make();
-            document.getElementById("captcha").innerHTML = qr.createImgTag().link(obj);
+            document.getElementById("captcha").innerHTML = "<img src='https://chart.googleapis.com/chart?chs=170x170&cht=qr&chl=" + obj + "&chld=L|1&choe=UTF-8'>";
             document.getElementById("msg").innerHTML = "Scan with bitcoin lightning wallet";
           }
           else{
