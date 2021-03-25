@@ -124,10 +124,7 @@ function lnurlcaptcha_function($atts = array())
     </div>
   </body>
   <script type="text/javascript">
-    jigsaw.init({
-      el: document.getElementById("captcha"),
-      imgArray: [],
-      onSuccess: function () {
+      if (captchavar == true) {
         /////////SHOW PROCESSING/////////
         document.getElementById("msg").innerHTML =
         "Processing...";
@@ -150,9 +147,6 @@ function lnurlcaptcha_function($atts = array())
         }
         });
       },
-      onFail: cleanMsg,
-      onRefresh: cleanMsg,
-    });
     function cleanMsg() {
     }
   </script>
